@@ -13,7 +13,7 @@ import (
 )
 
 var offsetX, offsetY, scaleImage, fontSize, spacing float64
-var scaleH, scaleW, scaleHCenter, scaleWCenter, center, tiles, verbose, version bool
+var scaleH, scaleW, scaleHCenter, scaleWCenter, center, tiles, verbose, version, onlyFirstPage bool
 var opacity, angle float64
 var font, color string
 
@@ -30,6 +30,7 @@ func init() {
 	flag.BoolVarP(&scaleH, "scale-height", "h", false, "Scale Image to page height. If set, top offset Y will be ignored.")
 	flag.BoolVarP(&scaleWCenter, "scale-width-center", "W", false, "Scale Image to page width and Y will be set at middle.")
 	flag.BoolVarP(&scaleHCenter, "scale-height-center", "H", false, "Scale Image to page height and X will be set at middle.")
+	flag.BoolVarP(&onlyFirstPage, "only-first-page", "F", true, "Only in first Page.")
 
 	flag.StringVarP(&font, "font", "f", "helvetica_bold", "Set font. Check --help for allowed name list.")
 	flag.StringVarP(&color, "color", "l", "333333", "Set font color as 6 or 3 character hexadecimal code (without '#'). See https://www.color-hex.com")
@@ -83,12 +84,13 @@ func main() {
 	sourcePath := args[0]
 	watermark := args[1]
 	outputPath := args[2]
-	markPDF(sourcePath, outputPath, watermark)
+
+	markPDF(sourcePath, outputPath, watermark, onlyFirstPage)
 
 	os.Exit(0)
 }
 
-func markPDF(inputPath string, outputPath string, watermark string) error {
+func markPDF(inputPath string, outputPath string, watermark string, onlyFirstPage bool) error {
 	debugInfo(fmt.Sprintf("Input PDF: %v", inputPath))
 
 	c := creator.New()
@@ -143,7 +145,13 @@ func markPDF(inputPath string, outputPath string, watermark string) error {
 				adjustImagePosition(watermarkImg, c)
 			}
 
-			drawImage(watermarkImg, c)
+			if onlyFirstPage {
+				if pageNum == 1 {
+					drawImage(watermarkImg, c)
+				}
+			}else{
+				drawImage(watermarkImg, c)
+			}
 
 		} else {
 
@@ -156,7 +164,13 @@ func markPDF(inputPath string, outputPath string, watermark string) error {
 				applyTemplate(t, &rec, para)
 			}
 
-			drawText(para, c)
+			if onlyFirstPage {
+				if pageNum == 1 {
+					drawText(para, c)
+				}
+			}else{
+				drawText(para, c)
+			}
 		}
 	}
 
