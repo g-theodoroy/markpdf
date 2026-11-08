@@ -30,7 +30,7 @@ func init() {
 	flag.BoolVarP(&scaleH, "scale-height", "h", false, "Scale Image to page height. If set, top offset Y will be ignored.")
 	flag.BoolVarP(&scaleWCenter, "scale-width-center", "W", false, "Scale Image to page width and Y will be set at middle.")
 	flag.BoolVarP(&scaleHCenter, "scale-height-center", "H", false, "Scale Image to page height and X will be set at middle.")
-	flag.BoolVarP(&onlyFirstPage, "only-first-page", "F", true, "Only in first Page.")
+	flag.BoolVarP(&onlyFirstPage, "only-first-page", "F", false, "Only in first Page.")
 
 	flag.StringVarP(&font, "font", "f", "helvetica_bold", "Set font. Check --help for allowed name list.")
 	flag.StringVarP(&color, "color", "l", "333333", "Set font color as 6 or 3 character hexadecimal code (without '#'). See https://www.color-hex.com")
